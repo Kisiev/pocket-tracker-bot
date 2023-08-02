@@ -18,10 +18,12 @@ services:
       - ~/.ssh:/root/.ssh # for composer
       - ./:/app
       - ./logs:/app/storage/logs
+      - ./nginx/main.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8001:80"
       - "3306:3306"
       - "6379:6379"
+      - "443:443"
     environment:
       MYSQL_DATABASE: money-bot
       MYSQL_USER: root
