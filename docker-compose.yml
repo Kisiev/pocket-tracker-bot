@@ -1,0 +1,36 @@
+version: '3.9'
+
+networks:
+  local:
+    name: local
+
+volumes:
+  db:
+
+services:
+
+  money-bot:
+    container_name: money-bot
+    image: cr.selcloud.ru/vmdocker/arm64v8/ol9-vm-php8.1:laravel
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql
+      - ~/.ssh:/root/.ssh # for composer
+      - ./:/app
+      - ./logs:/app/storage/logs
+    ports:
+      - "8001:80"
+      - "3306:3306"
+      - "6379:6379"
+    environment:
+      MYSQL_DATABASE: money-bot
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      XDEBUG_CONFIG: "client_host=host.docker.internal"
+      XDEBUG_MODE: "debug"
+      PHP_IDE_CONFIG: 'serverName=Docker'
+      XDEBUG_SESSION: "Docker"
+    working_dir: /app
+    networks:
+      - local
