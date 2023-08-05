@@ -8,6 +8,7 @@ use App\Interfaces\Command;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Telegram\Handlers\AddCategoryCommand;
+use Modules\Telegram\Handlers\DeleteCategoryCommand;
 use Modules\Telegram\Handlers\InputChargeCommand;
 use Modules\Telegram\Handlers\ReportCommand;
 
@@ -16,6 +17,7 @@ class TelegramCommandListener implements ShouldQueue
     private const COMMAND_MAP = [
         '/addcharge' => InputChargeCommand::class,
         '/addcategory' => AddCategoryCommand::class,
+        '/deletecategory' => DeleteCategoryCommand::class,
         '/report' => ReportCommand::class,
     ];
 
@@ -25,6 +27,8 @@ class TelegramCommandListener implements ShouldQueue
             Event::InputCharge->value => InputChargeCommand::class,
             Event::AddCategory->value => AddCategoryCommand::class,
             Event::SelectCategory->value => InputChargeCommand::class,
+            Event::DeleteCategory->value => DeleteCategoryCommand::class,
+            Event::SelectTransferCategory->value => DeleteCategoryCommand::class,
         ];
 
         if (isset($hanlerMap[$event->value])) {
@@ -45,6 +49,9 @@ class TelegramCommandListener implements ShouldQueue
     public function handle(MessageEvent $event): void
     {
         if (isset(self::COMMAND_MAP[$event->dto->text])) {
+            $event->user->action->clear();
+            $event->user->save();
+
             app(self::COMMAND_MAP[$event->dto->text])->run($event);
             return;
         }

@@ -43,6 +43,13 @@ class UserActionField
         $this->commandHistory = [];
     }
 
+    public function clearFields(array $fields): void
+    {
+        foreach ($fields as $field) {
+            unset($this->fields[$field]);
+        }
+    }
+
     public function popLastCommand(): ?Event
     {
         $command = array_pop($this->commandHistory);

@@ -2,7 +2,7 @@
 
 namespace Modules\Telegram\Services;
 
-use App\Events\AnswerEvent;
+use App\Events\MessageSentEvent;
 use Exception;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\InvalidArgumentException;
@@ -26,7 +26,7 @@ class TelegramService
     public function sendMessage(int $telegramId, string $message, $keyboard = null): void
     {
         $this->bot->sendMessage($telegramId, $message,'html', false, null, $keyboard);
-        event(new AnswerEvent($telegramId, $message));
+        event(new MessageSentEvent($telegramId, $message));
     }
 
     /**

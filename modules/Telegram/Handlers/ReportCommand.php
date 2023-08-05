@@ -16,22 +16,26 @@ class ReportCommand extends AbstractCommandService
         $message = [];
         $totalCost = 0;
 
-        $categories = Category::with('charges')->get();
+        $categories = Category::with('charges')->where('user_id', $event->user->id)->get();
 
         foreach ($categories as $category) {
             $message[] = "<b>{$category->title}</b>";
 
             foreach ($category->charges as $charge) {
                 $totalCost += $charge->cost;
-                $message[] = "   🏷 <b>{$charge->cost}</b> - {$charge->title}";
+                $cost = number_format($charge->cost, 0, '.', ' ');
+                $message[] = "   🏷 <b>{$cost}</b> - {$charge->title}";
             }
         }
 
+        $totalCost = number_format($totalCost, 0, '.', ' ');
         $message[] = "<b>Итого</b>: {$totalCost}";
 
         $this->telegramService->sendMessage(
             $event->user->id,
             implode("\n", $message),
         );
+
+        $this->after($event);
     }
 }

@@ -22,6 +22,11 @@ class AddCategoryCommand extends AbstractCommandService
         ];
     }
 
+    public function clearableFields(): array
+    {
+        return ['title'];
+    }
+
     public function execute(MessageEvent $event): void
     {
         $category = Category::create([
@@ -30,13 +35,13 @@ class AddCategoryCommand extends AbstractCommandService
         ]);
 
         $event->user->action->fields['category_id'] = $category->id;
-        unset($event->user->action->fields['title']);
-        $event->user->save();
 
         $this->telegramService->sendMessage(
             $event->user->id,
             'Сохранено',
         );
+
+        $this->after($event);
     }
 
     protected function inputCategoryTitle(User $user)

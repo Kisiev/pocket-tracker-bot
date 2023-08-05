@@ -2,13 +2,13 @@
 
 namespace Modules\Logging\Listeners;
 
-use App\Events\AnswerEvent;
+use App\Events\MessageSentEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Logging\Models\Logging;
 
 class TelegramAnswerListener implements ShouldQueue
 {
-    public function handle(AnswerEvent $event): void
+    public function handle(MessageSentEvent $event): void
     {
         Logging::create([
             'user_id' => $event->userId,

@@ -20,7 +20,12 @@ abstract class AbstractCommandService implements Command
     ) {
     }
 
-    public function rules(): array
+    protected function rules(): array
+    {
+        return [];
+    }
+
+    protected function clearableFields(): array
     {
         return [];
     }
@@ -31,13 +36,11 @@ abstract class AbstractCommandService implements Command
 
         if ($invalidField = $this->getFirstInvalidField($event->user)) {
             $this->saveActionWithHistory($event->user, $invalidField);
-            $this->requestedField($event->user, $invalidField);
+            $this->requestField($event->user, $invalidField);
             return;
         }
 
         $this->execute($event);
-
-        $this->after($event);
     }
 
     private function getFirstInvalidField(User $user): ?string
@@ -51,7 +54,7 @@ abstract class AbstractCommandService implements Command
         return array_key_first($errors);
     }
 
-    private function saveActionWithHistory(User $user, string $field): void
+    protected function saveActionWithHistory(User $user, string $field): void
     {
         $user->action->currentField = $field;
         $user->action->command = $this->event;
@@ -64,14 +67,14 @@ abstract class AbstractCommandService implements Command
         $user->save();
     }
 
-    private function requestedField(User $user, string $field): void
+    protected function requestField(User $user, string $field): void
     {
         if (isset(static::FIELD_ACTION_MAP[$field])) {
             $this->{static::FIELD_ACTION_MAP[$field]}($user);
         }
     }
 
-    private function saveCurrentFieldIfExists(MessageEvent $event)
+    protected function saveCurrentFieldIfExists(MessageEvent $event)
     {
         $user = $event->user;
         if (!empty($user->action->currentField)) {
@@ -80,14 +83,15 @@ abstract class AbstractCommandService implements Command
         }
     }
 
-    public abstract function execute(MessageEvent $event): void;
+    protected abstract function execute(MessageEvent $event): void;
 
-    public function after(MessageEvent $event): void
+    protected function after(MessageEvent $event): void
     {
         $event->user->action->popLastCommand();
         if ($lastEvent = Arr::last($event->user->action->commandHistory)) {
             $event->user->action->command = Event::tryFrom($lastEvent);
             $event->user->action->currentField = '';
+            $event->user->action->clearFields($this->clearableFields());
             $event->user->save();
             event($event);
             return;

@@ -40,6 +40,8 @@ class InputChargeCommand extends AbstractCommandService
             $event->user->id,
             'Сохранено',
         );
+
+        $this->after($event);
     }
 
     protected function inputCost(User $user)

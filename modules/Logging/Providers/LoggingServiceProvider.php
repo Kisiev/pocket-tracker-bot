@@ -2,7 +2,7 @@
 
 namespace Modules\Logging\Providers;
 
-use App\Events\AnswerEvent;
+use App\Events\MessageSentEvent;
 use App\Events\MessageEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -24,7 +24,7 @@ class LoggingServiceProvider extends ServiceProvider
         );
 
         Event::listen(
-            AnswerEvent::class,
+            MessageSentEvent::class,
             [TelegramAnswerListener::class, 'handle']
         );
     }
