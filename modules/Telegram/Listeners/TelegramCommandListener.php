@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Telegram\Handlers\AddCategoryCommand;
 use Modules\Telegram\Handlers\DeleteCategoryCommand;
+use Modules\Telegram\Handlers\ExportCommand;
 use Modules\Telegram\Handlers\InputChargeCommand;
 use Modules\Telegram\Handlers\ReportCommand;
 
@@ -19,6 +20,7 @@ class TelegramCommandListener implements ShouldQueue
         '/addcategory' => AddCategoryCommand::class,
         '/deletecategory' => DeleteCategoryCommand::class,
         '/report' => ReportCommand::class,
+        '/export' => ExportCommand::class,
     ];
 
     private function getHandlerFromCommand(Event $event): Command

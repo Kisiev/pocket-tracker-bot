@@ -2,12 +2,12 @@
 
 namespace App\Casts;
 
-use App\ValueObjects\UserActionField;
+use App\ValueObjects\UserSettingsField;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Model;
 
-class UserAction implements CastsAttributes
+class UserSettings implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -17,7 +17,7 @@ class UserAction implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         $data = Json::decode($value);
-        return UserActionField::fromArray($data ?? []);
+        return UserSettingsField::fromArray($data ?? []);
     }
 
     /**
@@ -27,7 +27,7 @@ class UserAction implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        /** @var UserActionField $value */
+        /** @var UserSettingsField $value */
         return Json::encode($value ? $value->toArray() : []);
     }
 }

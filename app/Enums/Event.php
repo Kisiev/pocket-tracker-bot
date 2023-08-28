@@ -10,5 +10,6 @@ enum Event: string
     case SelectCategory = 'selectCategory';
     case InputCharge = 'inputCharge';
     case Report = 'report';
+    case Export = 'export';
     case Skip = 'skip';
 }

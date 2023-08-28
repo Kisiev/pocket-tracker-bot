@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Modules\Telegram\Providers\TelegramServiceProvider::class,
         Modules\Logging\Providers\LoggingServiceProvider::class,
+        Modules\Notion\Providers\NotionServiceProvider::class,
     ])->toArray(),
 
     /*

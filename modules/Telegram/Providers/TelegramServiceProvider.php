@@ -2,11 +2,13 @@
 
 namespace Modules\Telegram\Providers;
 
+use App\Events\ChargesExportedEvent;
 use App\Events\MessageEvent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Modules\Telegram\Commands\SetTelegramWebhookCommand;
+use Modules\Telegram\Listeners\ExportListener;
 use Modules\Telegram\Listeners\TelegramCommandListener;
 
 class TelegramServiceProvider extends ServiceProvider
@@ -33,6 +35,11 @@ class TelegramServiceProvider extends ServiceProvider
         Event::listen(
             MessageEvent::class,
             [TelegramCommandListener::class, 'handle']
+        );
+
+        Event::listen(
+            ChargesExportedEvent::class,
+            [ExportListener::class, 'handle']
         );
     }
 

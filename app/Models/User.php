@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Casts\UserAction;
+use App\Casts\UserSettings;
 use App\ValueObjects\UserActionField;
+use App\ValueObjects\UserSettingsField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $last_name
  * @property string $username
  * @property UserActionField $action
+ * @property UserSettingsField $settings
  */
 class User extends Authenticatable
 {
@@ -31,6 +34,7 @@ class User extends Authenticatable
         'last_name',
         'username',
         'action',
+        'settings',
     ];
 
     /**
@@ -39,6 +43,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'action' => UserAction::class
+        'action' => UserAction::class,
+        'settings' => UserSettings::class,
     ];
 }
